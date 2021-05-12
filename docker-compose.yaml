@@ -1,0 +1,28 @@
+version: "3"
+
+volumes:
+  web_data:
+    name: ${VOLUME_ID}
+
+services:
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: test-app
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./testApp.env
+    environment:
+      - APP_PORT
+    volumes:
+      - web_data:/usr/share/nginx/html:ro
+    expose:
+      - 3000
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        max_attempts: 3
+
